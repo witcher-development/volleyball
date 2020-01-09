@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Team } from '../model';
+import { Game, Team } from '../model';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +10,24 @@ export class AppComponent implements OnInit {
   title = 'volleyball';
 
   ngOnInit(): void {
-    const team = new Team();
+    const game = new Game();
+
+    const team1 = 'team1';
+    const team2 = 'team2';
+
+    game.initGame(team1, team2);
+
+    game.field[team1].setPlayer(1, 1);
+    game.field[team1].setPlayer(2, 2);
+
+    game.field[team2].setPlayer(1, 1);
+    game.field[team2].setPlayer(2, 2);
+
+    game.initRound(team1);
+
+    game.field[team1].players[0].makeHit(team2, 2, 1, 'arc');
+    game.field[team2].players[1].makeHit(team1, 2, 1, 'arc');
+    game.field[team1].players[0].makeHit(team2, 1, 1, 'arc');
+    game.field[team2].players[0].makeHit(team1, 1, 1, 'arc');
   }
 }

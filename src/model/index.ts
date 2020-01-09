@@ -1,7 +1,7 @@
 import * as uuid from 'uuid';
-import { getRandomInt } from '../helpers';
+import { getRandomInt, Subject } from '../helpers';
 
-export type PlayerSkillI = 1 | 2 | 3 | 0;
+export type PlayerSkillI = 1 | 2 | 3;
 export type PlayerIdI = string;
 export type PlayerPositionI = 1 | 2 | 3 | 4 | 5 | 6;
 export interface PlayerInfo {
@@ -11,10 +11,17 @@ export interface PlayerInfo {
 
 export interface PlayerI {
   id: PlayerIdI;
+  teamName: TeamNameI;
+
   position: PlayerPositionI;
   skill: PlayerSkillI;
 
-  makeShoot(direction: PlayerIdI, power: ShootPowerI, angle: ShootAngleI): void;
+  makeHit(
+    team: TeamNameI,
+    direction: PlayerPositionI,
+    power: HitPowerI,
+    angle: HitAngleI,
+  ): void;
 }
 
 export type TeamIdI = string;
@@ -34,68 +41,92 @@ export interface TeamI {
 }
 
 export interface FieldI {
-  team1: TeamI;
-  team2: TeamI;
+  team1?: TeamI;
+  team2?: TeamI;
 }
 
-export type ShootPowerI = 1 | 2 | 3 | 4 | 5;
-export type ShootAngleI = 'arc' | 'line';
+export type HitPowerI = 1 | 2 | 3 | 4 | 5;
+export type HitAngleI = 'arc' | 'line';
 
-export interface ShootI {
+export interface HitI {
   id: number;
 
-  fromTeam: TeamIdI;
-  fromPlayer: PlayerIdI;
-  toPlayer: PlayerIdI;
+  fromTeam: TeamNameI;
+  toTeam: TeamNameI;
 
-  power: ShootPowerI;
-  angle: ShootAngleI;
+  fromPlayer: PlayerPositionI;
+  toPlayer: PlayerPositionI;
+
+  power: HitPowerI;
+  angle: HitAngleI;
 }
 
-export type RoundIdI = number;
+export type RoundIdI = string;
 
 export interface RoundI {
   id: RoundIdI;
-  startingTeam: TeamI;
-  shoots: ShootI[];
+  hits: HitI[];
+
+  onHit(hit: HitI): void;
 }
 
 export interface GameI {
   field: FieldI;
   rounds: RoundI[];
-  currentRoundId: RoundIdI;
+  currentRound: RoundI;
 
-  initGame(teams: TeamI[]): void;
+  initGame(teamName1: TeamNameI, teamName2: TeamNameI): void;
   initRound(startingTeam: TeamNameI): void;
 }
 
-// export class Shoot implements ShootI {}
-
 export class Player implements PlayerI {
   public id = uuid();
-  public position;
-  public skill;
 
-  constructor(position, skill) {
-    this.position = position;
-    this.skill = skill;
+  constructor(
+    public teamName,
+    public position,
+    public skill,
+    private game: Game,
+  ) {
+    game.subscribe((round) => {
+      round.subscribe((hit) => {
+        if (hit.toTeam === this.teamName && hit.toPlayer === this.position) {
+          console.log(this.teamName, '- player', this.position, ': I got hit!');
+        }
+      });
+    });
   }
 
-  makeShoot(direction, power, angle) {}
+  makeHit(team, direction, power, angle) {
+    const hit = new Hit(
+      this.teamName,
+      team,
+      this.position,
+      direction,
+      power,
+      angle,
+    );
+
+    console.log(this.teamName, '- player', this.position, ': I made a hit!');
+
+    this.game.currentRound.onHit(hit);
+  }
 }
 
 export class Team implements TeamI {
   public id = uuid();
-  public name;
   public players = [];
   public score = 0;
 
-  constructor(teamName = 'DeepMind') {
-    this.name = teamName;
-  }
+  constructor(public game, public name) {}
 
   setPlayer(position, skill) {
-    this.players[position - 1] = new Player(position, skill);
+    this.players[position - 1] = new Player(
+      this.name,
+      position,
+      skill,
+      this.game,
+    );
   }
   setTeam(players: PlayerInfo[]): void {
     players.forEach(({ position, skill }) => {
@@ -123,16 +154,45 @@ export class Team implements TeamI {
   }
 }
 
-export class Game implements GameI {
-  public field;
-  public rounds;
-  public currentRoundId;
+export class Hit implements HitI {
+  public id = uuid();
 
-  initGame(teams) {
-    this.field[teams[0].name] = teams[0];
-    this.field[teams[1].name] = teams[1];
+  constructor(
+    public fromTeam,
+    public toTeam,
+    public fromPlayer,
+    public toPlayer,
+    public power,
+    public angle,
+  ) {}
+}
 
-    this.initRound(teams[0].name);
+export class Round extends Subject<Hit> implements RoundI {
+  public id = uuid();
+  public hits = [];
+
+  onHit(hit) {
+    this.hits.push(hit);
+    this.subscribers.forEach((handler) => handler(hit));
   }
-  initRound(startingTeam) {}
+}
+
+export class Game extends Subject<Round> implements GameI {
+  public field = {};
+  public rounds = [];
+  public currentRound;
+
+  initGame(name1, name2) {
+    this.field[name1] = new Team(this, name1);
+    this.field[name2] = new Team(this, name2);
+
+    this.initRound(this.field[name1]);
+  }
+  initRound(team) {
+    const newRound = new Round();
+    this.rounds.push(newRound);
+    this.currentRound = newRound;
+
+    this.subscribers.forEach((h) => h(newRound));
+  }
 }
