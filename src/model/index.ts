@@ -16,6 +16,9 @@ export interface PlayerI {
   position: PlayerPositionI;
   skill: PlayerSkillI;
 
+  unsubscribeFromGame: () => void;
+  unsubscribeFromRound: () => void;
+
   makeHit(
     team: TeamNameI,
     direction: PlayerPositionI,
@@ -81,6 +84,8 @@ export interface GameI {
 
 export class Player implements PlayerI {
   public id = uuid();
+  public unsubscribeFromGame;
+  public unsubscribeFromRound;
 
   constructor(
     public teamName,
@@ -88,8 +93,9 @@ export class Player implements PlayerI {
     public skill,
     private game: Game,
   ) {
-    game.subscribe((round) => {
-      round.subscribe((hit) => {
+    this.unsubscribeFromGame = game.subscribe((round) => {
+      console.log('new round!');
+      this.unsubscribeFromRound = round.subscribe((hit) => {
         if (hit.toTeam === this.teamName && hit.toPlayer === this.position) {
           console.log(this.teamName, '- player', this.position, ': I got hit!');
         }
@@ -185,8 +191,6 @@ export class Game extends Subject<Round> implements GameI {
   initGame(name1, name2) {
     this.field[name1] = new Team(this, name1);
     this.field[name2] = new Team(this, name2);
-
-    this.initRound(this.field[name1]);
   }
   initRound(team) {
     const newRound = new Round();

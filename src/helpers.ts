@@ -6,10 +6,10 @@ export class Subject<SharedProperty> {
   protected subscribers = [];
 
   subscribe(handler: (value: SharedProperty) => void) {
-    const index = this.subscribers.length + 1;
+    const index = this.subscribers.length;
     this.subscribers[index] = handler;
     return () => {
-      delete this.subscribers[index];
+      this.subscribers.splice(index, 1);
     };
   }
 
