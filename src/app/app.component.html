@@ -1,3 +1,4 @@
-<div>
-
+<div class="app">
+  <app-form *ngIf="!isGameStarted"></app-form>
+  <app-game *ngIf="isGameStarted"></app-game>
 </div>

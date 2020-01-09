@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Game, Team } from '../model';
+import { Game } from '../model';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +7,7 @@ import { Game, Team } from '../model';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = 'volleyball';
+  isGameStarted = false;
 
   ngOnInit(): void {
     const game = new Game();
