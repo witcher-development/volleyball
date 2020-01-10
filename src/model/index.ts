@@ -100,10 +100,8 @@ export class Player implements PlayerI {
     private game: Game,
   ) {
     this.unsubscribeFromGame = game.subscribe((round) => {
-      console.log('new round!');
       this.unsubscribeFromRound = round.subscribe((hit) => {
         if (hit.toTeam === this.teamName && hit.toPlayer === this.position) {
-          console.log(this.teamName, '- player', this.position, ': I got hit!');
         }
       });
     });
@@ -118,8 +116,6 @@ export class Player implements PlayerI {
       power,
       angle,
     );
-
-    console.log(this.teamName, '- player', this.position, ': I made a hit!');
 
     this.game.currentRound.onHit(hit);
   }
@@ -190,6 +186,10 @@ export class Round extends Subject<Hit> implements RoundI {
   public id = uuid();
   public hits = [];
 
+  constructor(public firstHitTeam: TeamNameI) {
+    super();
+  }
+
   onHit(hit) {
     this.hits.push(hit);
     this.subscribers.forEach((handler) => handler(hit));
@@ -205,8 +205,8 @@ export class Game extends Subject<Round> implements GameI {
     this.field[name1] = new Team(this, name1);
     this.field[name2] = new Team(this, name2);
   }
-  initRound(team) {
-    const newRound = new Round();
+  initRound(teamName) {
+    const newRound = new Round(teamName);
     this.rounds.push(newRound);
     this.currentRound = newRound;
 

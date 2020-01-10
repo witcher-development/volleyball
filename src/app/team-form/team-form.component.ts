@@ -44,6 +44,7 @@ export class TeamFormComponent {
     });
 
     dialogRef.afterClosed().subscribe((skill: PlayerSkillI) => {
+      if (skill === player.skill) return;
       if (!checkIfCanSetLevel(this.players, skill)) {
         alert('There are already two players with this level');
         return;

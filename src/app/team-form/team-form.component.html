@@ -13,11 +13,11 @@
       class="form__grid_inner"
     ></app-grid>
     <div
-      class="form__player"
+      class="player"
       *ngFor="let player of players"
       (click)="setPlayer(player)"
     >
-      <span [className]="'form__player-label form__player-label_' + player.skill">{{ player.position }}</span>
+      <span [className]="'player-label player-label_' + player.skill">{{ player.position }}</span>
     </div>
   </div>
 </div>

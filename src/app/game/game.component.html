@@ -1,1 +1,19 @@
-<p>game works!</p>
+<div class="game">
+  <app-grid [halves]="'both'" class="game__grid"></app-grid>
+  <div class="game__team">
+    <p class="game__team-name">{{team1.name}}</p>
+    <div class="player" *ngFor="let player of playersTop">
+      <span [className]="'player-label player-label_' + player.skill">{{
+        player.position
+      }}</span>
+    </div>
+  </div>
+  <div class="game__team">
+    <p class="game__team-name">{{team2.name}}</p>
+    <div class="player" *ngFor="let player of playersBottom">
+      <span [className]="'player-label player-label_' + player.skill">{{
+        player.position
+      }}</span>
+    </div>
+  </div>
+</div>

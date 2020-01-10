@@ -1,19 +1,42 @@
 <div class="form">
-  <button mat-raised-button color="primary" class="form__button">Start</button>
-  <mat-tab-group
-    mat-stretch-tabs
-    [animationDuration]="0"
-    class="form__nav"
-    (selectedTabChange)="log($event)"
+  <button
+    mat-raised-button
+    color="primary"
+    class="form__button"
+    [disabled]="!areTeamsReady"
+    (click)="onClickStart()"
   >
+    Start
+  </button>
+  <mat-tab-group mat-stretch-tabs [animationDuration]="0" class="form__nav">
     <mat-tab label="PvP">
       <div class="form__team">
-        <p>First player</p>
+        <div class="form__team-header">
+          <p>First player</p>
+          <button
+            mat-raised-button
+            color="primary"
+            class="form__button"
+            (click)="game.field[team1.name].randomTeam()"
+          >
+            Random
+          </button>
+        </div>
         <app-team-form [(team)]="team1" [fieldPart]="'top'"></app-team-form>
       </div>
       <mat-divider></mat-divider>
       <div class="form__team">
-        <p>Second player</p>
+        <div class="form__team-header">
+          <p>Second player</p>
+          <button
+            mat-raised-button
+            color="primary"
+            class="form__button"
+            (click)="game.field[team2.name].randomTeam()"
+          >
+            Random
+          </button>
+        </div>
         <app-team-form [(team)]="team2" [fieldPart]="'bottom'"></app-team-form>
       </div>
     </mat-tab>
@@ -24,5 +47,13 @@
       </div>
     </mat-tab>
   </mat-tab-group>
-  <button mat-raised-button color="primary" class="form__button">Start</button>
+  <button
+    mat-raised-button
+    color="primary"
+    class="form__button"
+    [disabled]="!areTeamsReady"
+    (click)="onClickStart()"
+  >
+    Start
+  </button>
 </div>

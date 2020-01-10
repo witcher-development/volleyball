@@ -1,13 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { TeamInfoI } from '../../model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { GameI, TeamInfoI, TeamNameI } from '../../model';
 
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss'],
 })
-export class FormComponent implements OnInit {
-  mode: 'PvP' | 'PvE' = 'PvP';
+export class FormComponent {
+  @Input()
+  game: GameI;
 
   @Input()
   team1: TeamInfoI;
@@ -15,9 +16,24 @@ export class FormComponent implements OnInit {
   @Input()
   team2: TeamInfoI;
 
-  log(value) {
-    console.log(value.tab.textLabel);
+  @Output()
+  startGame = new EventEmitter();
+
+  onClickStart() {
+    this.startGame.emit();
   }
 
-  ngOnInit() {}
+  get areTeamsReady(): boolean {
+    let ready = true;
+
+    [...this.team1.players, ...this.team2.players].forEach(({ skill }) => {
+      if (!skill) ready = false;
+    });
+
+    if (!this.team1.name || !this.team2.name) {
+      ready = false;
+    }
+
+    return ready;
+  }
 }
