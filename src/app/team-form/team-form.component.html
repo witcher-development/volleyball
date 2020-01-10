@@ -3,11 +3,21 @@
     <input
       matInput
       placeholder="Team name"
-      [ngModel]="name"
+      [ngModel]="team.name"
       (ngModelChange)="onNameChange($event)"
     />
   </mat-form-field>
-  <div class="form__grid">
-    <div></div>
+  <div [className]="fieldPart + '-half form__grid'">
+    <app-grid
+      [halves]="fieldPart"
+      class="form__grid_inner"
+    ></app-grid>
+    <div
+      class="form__player"
+      *ngFor="let player of players"
+      (click)="setPlayer(player)"
+    >
+      <span [className]="'form__player-label form__player-label_' + player.skill">{{ player.position }}</span>
+    </div>
   </div>
 </div>

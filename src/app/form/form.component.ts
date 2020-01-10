@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { TeamInfoI, TeamNameI } from '../../model';
+import { Component, Input, OnInit } from '@angular/core';
+import { TeamInfoI } from '../../model';
 
 @Component({
   selector: 'app-form',
@@ -8,14 +8,12 @@ import { TeamInfoI, TeamNameI } from '../../model';
 })
 export class FormComponent implements OnInit {
   mode: 'PvP' | 'PvE' = 'PvP';
-  team1: TeamInfoI = {
-    name: '',
-    players: [],
-  };
-  team2: TeamInfoI = {
-    name: '',
-    players: [],
-  };
+
+  @Input()
+  team1: TeamInfoI;
+
+  @Input()
+  team2: TeamInfoI;
 
   log(value) {
     console.log(value.tab.textLabel);

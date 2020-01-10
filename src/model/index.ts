@@ -4,9 +4,9 @@ import { getRandomInt, Subject } from '../helpers';
 export type PlayerSkillI = 1 | 2 | 3;
 export type PlayerIdI = string;
 export type PlayerPositionI = 1 | 2 | 3 | 4 | 5 | 6;
-export interface PlayerInfo {
-  position: PlayerPositionI;
-  skill: PlayerSkillI;
+export interface PlayerInfoI {
+  position: PlayerPositionI | 0;
+  skill: PlayerSkillI | 0;
 }
 
 export interface PlayerI {
@@ -31,18 +31,18 @@ export type TeamIdI = string;
 export type TeamNameI = string;
 export interface TeamInfoI {
   name: TeamNameI;
-  players: PlayerI[];
+  players: PlayerI[] | PlayerInfoI[];
 }
 
 export interface TeamI {
   id: TeamIdI;
   name: TeamNameI;
-  players: PlayerI[];
+  players: PlayerI[] | PlayerInfoI[];
 
   score: number;
 
   setPlayer(position: PlayerPositionI, player: PlayerI): void;
-  setTeam(players: PlayerInfo[]): void;
+  setTeam(players: PlayerInfoI[]): void;
 
   randomTeam(): void;
 }
@@ -86,6 +86,8 @@ export interface GameI {
   initRound(startingTeam: TeamNameI): void;
 }
 
+export type FieldPartI = 'top' | 'bottom' | 'both';
+
 export class Player implements PlayerI {
   public id = uuid();
   public unsubscribeFromGame;
@@ -123,9 +125,16 @@ export class Player implements PlayerI {
   }
 }
 
+const emptyPlayer: PlayerInfoI = {
+  position: 0,
+  skill: 0,
+};
+
 export class Team implements TeamI {
   public id = uuid();
-  public players = [];
+  public players = Array(6)
+    .fill(emptyPlayer)
+    .map((player, i) => ({ ...player, position: i + 1 }));
   public score = 0;
 
   constructor(public game, public name) {}
@@ -138,7 +147,7 @@ export class Team implements TeamI {
       this.game,
     );
   }
-  setTeam(players: PlayerInfo[]): void {
+  setTeam(players: PlayerInfoI[]): void {
     players.forEach(({ position, skill }) => {
       this.setPlayer(position, skill);
     });

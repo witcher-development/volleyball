@@ -1,9 +1,16 @@
 .form {
+  display: flex;
+  flex-direction: column;
+
   &__nav {
-    position: relative;
+    margin-top: 20px;
   }
 
   &__team {
     padding: 50px 0;
+  }
+
+  &__button {
+    align-self: flex-end;
   }
 }

@@ -1,4 +1,5 @@
-<div class="">
+<div class="form">
+  <button mat-raised-button color="primary" class="form__button">Start</button>
   <mat-tab-group
     mat-stretch-tabs
     [animationDuration]="0"
@@ -8,22 +9,20 @@
     <mat-tab label="PvP">
       <div class="form__team">
         <p>First player</p>
-        <app-team-form
-          [(name)]="team1.name"
-          [(players)]="team1.players"
-        ></app-team-form>
+        <app-team-form [(team)]="team1" [fieldPart]="'top'"></app-team-form>
       </div>
       <mat-divider></mat-divider>
       <div class="form__team">
         <p>Second player</p>
-        <app-team-form [(name)]="team2.name" [(players)]="team2.players"></app-team-form>
+        <app-team-form [(team)]="team2" [fieldPart]="'bottom'"></app-team-form>
       </div>
     </mat-tab>
     <mat-tab label="PvE">
       <div class="form__team">
         <p>First player</p>
-        <app-team-form [(name)]="team1"></app-team-form>
+        <!--        <app-team-form [(team)]="team1"></app-team-form>-->
       </div>
     </mat-tab>
   </mat-tab-group>
+  <button mat-raised-button color="primary" class="form__button">Start</button>
 </div>

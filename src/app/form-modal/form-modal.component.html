@@ -1,0 +1,17 @@
+<div class="modal">
+  <div mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Skill level</mat-label>
+      <mat-select [(value)]="data.skill">
+        <mat-option *ngFor="let level of skillLevels" [value]="level">
+          {{ level }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button [mat-dialog-close]="data.skill" color="primary">
+      Accept
+    </button>
+  </div>
+</div>
