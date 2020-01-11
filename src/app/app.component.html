@@ -1,15 +1,8 @@
 <div class="app">
   <app-form
-    *ngIf="!isGameStarted"
-    [game]="game"
-    [team1]="mapTeamToTeamInfo(team1)"
-    [team2]="mapTeamToTeamInfo(team2)"
-    (startGame)="onStartGame()"
+    *ngIf="!store.isGameStarted"
   ></app-form>
   <app-game
-    *ngIf="isGameStarted"
-    [game]="game"
-    [team1]="team1"
-    [team2]="team2"
+    *ngIf="store.isGameStarted"
   ></app-game>
 </div>

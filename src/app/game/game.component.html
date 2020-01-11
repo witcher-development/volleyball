@@ -1,13 +1,13 @@
 <div class="game">
   <app-grid [halves]="'both'" class="game__grid"></app-grid>
   <app-team
-    [game]="game"
-    [teamName]="team1.name"
+    [game]="store.game"
+    [teamName]="store.team1.name"
     [players]="playersTop"
   ></app-team>
   <app-team
-    [game]="game"
-    [teamName]="team2.name"
+    [game]="store.game"
+    [teamName]="store.team2.name"
     [players]="playersBottom"
   ></app-team>
 </div>

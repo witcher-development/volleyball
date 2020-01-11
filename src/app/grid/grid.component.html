@@ -1,0 +1,17 @@
+<div class="grid">
+  <div class="grid__half" [class.disabled]="halves === 'bottom'">
+    <div
+      class="grid__section"
+      [class.disabled]="halves === 'bottom'"
+      *ngFor="let i of positions"
+    ></div>
+  </div>
+  <div class="grid__line"></div>
+  <div class="grid__half" [class.disabled]="halves === 'top'">
+    <div
+      class="grid__section"
+      [class.disabled]="halves === 'top'"
+      *ngFor="let i of positions"
+    ></div>
+  </div>
+</div>

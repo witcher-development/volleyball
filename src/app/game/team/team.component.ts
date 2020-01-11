@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { GameI, PlayerI, TeamNameI } from '../../../model';
-import { StoreService } from '../../store.service';
 
 @Component({
   selector: 'app-team',

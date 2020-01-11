@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GameI, TeamI, TeamInfoI, TeamNameI } from '../../model';
+import { StoreService } from '../store.service';
 
 @Component({
   selector: 'app-form',
@@ -7,34 +8,24 @@ import { GameI, TeamI, TeamInfoI, TeamNameI } from '../../model';
   styleUrls: ['./form.component.scss'],
 })
 export class FormComponent {
-  @Input()
-  game: GameI;
-
-  @Input()
-  team1: TeamInfoI;
-
-  @Input()
-  team2: TeamInfoI;
-
-  @Output()
-  startGame = new EventEmitter();
+  constructor(public store: StoreService) {}
 
   onClickStart() {
-    this.startGame.emit();
+    this.store.initRound();
   }
 
   onTeamChange(name: TeamNameI, team: TeamI) {
-    this.game.field[name] = team;
+    this.store.game.field[name] = team;
   }
 
   get areTeamsReady(): boolean {
     let ready = true;
 
-    [...this.team1.players, ...this.team2.players].forEach(({ skill }) => {
+    [...this.store.team1.players, ...this.store.team2.players].forEach(({ skill }) => {
       if (!skill) ready = false;
     });
 
-    if (!this.team1.name || !this.team2.name) {
+    if (!this.store.team1.name || !this.store.team2.name) {
       ready = false;
     }
 

@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { sortPlayersArrayAccordingToCells } from '../../helpers';
-import { GameI, TeamI } from '../../model';
+import { StoreService } from '../store.service';
 
 @Component({
   selector: 'app-game',
@@ -8,20 +8,13 @@ import { GameI, TeamI } from '../../model';
   styleUrls: ['./game.component.scss'],
 })
 export class GameComponent {
-  @Input()
-  game: GameI;
-
-  @Input()
-  team1: TeamI;
-
-  @Input()
-  team2: TeamI;
+  constructor(public store: StoreService) {}
 
   get playersTop() {
-    return sortPlayersArrayAccordingToCells('top', this.team1.players);
+    return sortPlayersArrayAccordingToCells('top', this.store.team1.players);
   }
 
   get playersBottom() {
-    return sortPlayersArrayAccordingToCells('bottom', this.team2.players);
+    return sortPlayersArrayAccordingToCells('bottom', this.store.team2.players);
   }
 }
