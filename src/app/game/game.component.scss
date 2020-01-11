@@ -6,25 +6,4 @@
     position: absolute;
     width: 100%;
   }
-
-  &__team {
-    display: flex;
-    flex-wrap: wrap;
-
-    position: relative;
-
-    &:last-of-type {
-      margin-top: 10px;
-    }
-
-    &-name {
-      position: absolute;
-      top: 50%;
-      right: 0;
-
-      transform: translate(150%, -50%);
-
-      margin: 0;
-    }
-  }
 }

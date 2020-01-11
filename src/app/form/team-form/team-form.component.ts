@@ -6,12 +6,12 @@ import {
   PlayerInfoI,
   FieldPartI,
   PlayerSkillI,
-} from '../../model';
+} from '../../../model';
 import { FormModalComponent } from '../form-modal/form-modal.component';
 import {
   checkIfCanSetLevel,
   sortPlayersArrayAccordingToCells,
-} from '../../helpers';
+} from '../../../helpers';
 
 @Component({
   selector: 'app-team-form',
@@ -30,7 +30,6 @@ export class TeamFormComponent {
   constructor(public dialog: MatDialog) {}
 
   onNameChange(name: TeamNameI) {
-    this.team.name = name;
     this.teamChange.emit({
       ...this.team,
       name,

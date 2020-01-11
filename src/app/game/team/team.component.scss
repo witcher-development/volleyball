@@ -1,0 +1,65 @@
+.team {
+  display: flex;
+  flex-wrap: wrap;
+
+  position: relative;
+
+  &:last-of-type {
+    margin-top: 10px;
+  }
+
+  &-name {
+    position: absolute;
+    top: 50%;
+    right: 0;
+
+    transform: translate(150%, -50%);
+
+    margin: 0;
+  }
+}
+
+
+.player {
+  &__current {
+    &:after {
+      content: '';
+
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+
+      width: 35px;
+      height: 35px;
+
+      border-radius: 50%;
+      background-color: rgba(129, 199, 132, 1);
+
+      @keyframes ripple {
+        to {
+          transform: translate(-50%, -50%) scale(1.5);
+          background-color: rgba(129, 199, 132, 0.5);
+        }
+      }
+
+      animation: ripple 1s ease-out 0s infinite alternate;
+    }
+  }
+
+  &__pass {
+    transition: background-color 0.3s ease-out;
+    &:hover {
+      background-color: rgba(129, 199, 132, 0.5);
+    }
+  }
+
+  &__attack {
+    transition: background-color 0.3s ease-out;
+    &:hover {
+      background-color: rgba(227, 116, 116, 0.5);
+    }
+  }
+}
+

@@ -22,7 +22,7 @@
             Random
           </button>
         </div>
-        <app-team-form [(team)]="team1" [fieldPart]="'top'"></app-team-form>
+        <app-team-form (teamChange)="onTeamChange(team1.name, $event)" [(team)]="team1" [fieldPart]="'top'"></app-team-form>
       </div>
       <mat-divider></mat-divider>
       <div class="form__team">
@@ -37,7 +37,7 @@
             Random
           </button>
         </div>
-        <app-team-form [(team)]="team2" [fieldPart]="'bottom'"></app-team-form>
+        <app-team-form (teamChange)="onTeamChange(team1.name, $event)" [(team)]="team2" [fieldPart]="'bottom'"></app-team-form>
       </div>
     </mat-tab>
     <mat-tab label="PvE">

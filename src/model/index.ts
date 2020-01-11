@@ -1,5 +1,5 @@
 import * as uuid from 'uuid';
-import { getRandomInt, Subject } from '../helpers';
+import { getPlayerByPosition, getRandomInt, Subject } from '../helpers';
 
 export type PlayerSkillI = 1 | 2 | 3;
 export type PlayerIdI = string;
@@ -16,6 +16,8 @@ export interface PlayerI {
   position: PlayerPositionI;
   skill: PlayerSkillI;
 
+  isCurrentPlayer: boolean;
+
   unsubscribeFromGame: () => void;
   unsubscribeFromRound: () => void;
 
@@ -25,6 +27,8 @@ export interface PlayerI {
     power: HitPowerI,
     angle: HitAngleI,
   ): void;
+
+  takeHit(hit: HitI): void;
 }
 
 export type TeamIdI = string;
@@ -37,7 +41,7 @@ export interface TeamInfoI {
 export interface TeamI {
   id: TeamIdI;
   name: TeamNameI;
-  players: PlayerI[] | PlayerInfoI[];
+  players: PlayerI[];
 
   score: number;
 
@@ -48,8 +52,7 @@ export interface TeamI {
 }
 
 export interface FieldI {
-  team1?: TeamI;
-  team2?: TeamI;
+  [name: string]: TeamI;
 }
 
 export type HitPowerI = 1 | 2 | 3 | 4 | 5;
@@ -73,6 +76,7 @@ export type RoundIdI = string;
 export interface RoundI {
   id: RoundIdI;
   hits: HitI[];
+  currentPlayer: PlayerI;
 
   onHit(hit: HitI): void;
 }
@@ -92,6 +96,7 @@ export class Player implements PlayerI {
   public id = uuid();
   public unsubscribeFromGame;
   public unsubscribeFromRound;
+  public isCurrentPlayer = false;
 
   constructor(
     public teamName,
@@ -100,8 +105,14 @@ export class Player implements PlayerI {
     private game: Game,
   ) {
     this.unsubscribeFromGame = game.subscribe((round) => {
+      if (round.currentPlayer === this) {
+        this.isCurrentPlayer = true;
+        console.log('I`ll start round:', round.id);
+      }
       this.unsubscribeFromRound = round.subscribe((hit) => {
-        if (hit.toTeam === this.teamName && hit.toPlayer === this.position) {
+        if (round.currentPlayer === this) {
+          this.isCurrentPlayer = true;
+          console.log('I`ll take hit:', hit.id);
         }
       });
     });
@@ -117,7 +128,13 @@ export class Player implements PlayerI {
       angle,
     );
 
+    this.isCurrentPlayer = false;
+
     this.game.currentRound.onHit(hit);
+  }
+
+  takeHit(hit) {
+
   }
 }
 
@@ -185,13 +202,20 @@ export class Hit implements HitI {
 export class Round extends Subject<Hit> implements RoundI {
   public id = uuid();
   public hits = [];
+  public currentPlayer;
 
-  constructor(public firstHitTeam: TeamNameI) {
+  constructor(public game: GameI, public firstHitTeam: TeamNameI) {
     super();
+
+    this.currentPlayer = this.game.field[firstHitTeam].players[0];
   }
 
   onHit(hit) {
     this.hits.push(hit);
+    this.currentPlayer = getPlayerByPosition(
+      this.game.field[hit.toTeam].players,
+      hit.toPlayer,
+    );
     this.subscribers.forEach((handler) => handler(hit));
   }
 }
@@ -206,7 +230,7 @@ export class Game extends Subject<Round> implements GameI {
     this.field[name2] = new Team(this, name2);
   }
   initRound(teamName) {
-    const newRound = new Round(teamName);
+    const newRound = new Round(this, teamName);
     this.rounds.push(newRound);
     this.currentRound = newRound;
 

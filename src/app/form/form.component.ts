@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { GameI, TeamInfoI, TeamNameI } from '../../model';
+import { GameI, TeamI, TeamInfoI, TeamNameI } from '../../model';
 
 @Component({
   selector: 'app-form',
@@ -21,6 +21,10 @@ export class FormComponent {
 
   onClickStart() {
     this.startGame.emit();
+  }
+
+  onTeamChange(name: TeamNameI, team: TeamI) {
+    this.game.field[name] = team;
   }
 
   get areTeamsReady(): boolean {

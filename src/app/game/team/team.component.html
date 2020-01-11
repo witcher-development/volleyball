@@ -1,0 +1,12 @@
+<div class="team">
+  <p class="team-name">{{ teamName }}</p>
+  <div
+    [className]="getPlayerClass(player)"
+    *ngFor="let player of players"
+    (click)="onClickPlayer(player)"
+  >
+      <span [className]="'player-label player-label_' + player.skill">{{
+        player.position
+        }}</span>
+  </div>
+</div>

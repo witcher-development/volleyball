@@ -1,5 +1,7 @@
 import {
   FieldPartI,
+  GameI,
+  PlayerI,
   PlayerInfoI,
   PlayerPositionI,
   PlayerSkillI,
@@ -63,7 +65,7 @@ export const convertPositionToCell = (
 export const sortPlayersArrayAccordingToCells = (
   fieldPart: FieldPartI,
   players: PlayerInfoI[],
-): PlayerInfoI[] => {
+): PlayerI[] => {
   const sorted = [];
   players.forEach((player) => {
     sorted[convertPositionToCell(fieldPart, player.position)] = player;
@@ -82,4 +84,11 @@ export const checkIfCanSetLevel = (
   players.forEach(({ skill }) => counter[skill - 1]++);
 
   return counter[level - 1] < 2;
+};
+
+export const getPlayerByPosition = (
+  players: PlayerI[],
+  position: PlayerPositionI,
+): PlayerI => {
+  return players.find(({ position: pos }) => pos === position);
 };
