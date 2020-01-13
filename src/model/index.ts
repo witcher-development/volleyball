@@ -33,10 +33,6 @@ export interface PlayerI {
 
 export type TeamIdI = string;
 export type TeamNameI = string;
-export interface TeamInfoI {
-  name: TeamNameI;
-  players: PlayerI[] | PlayerInfoI[];
-}
 
 export interface TeamI {
   id: TeamIdI;

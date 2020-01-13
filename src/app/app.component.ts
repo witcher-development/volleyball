@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { StoreService } from './store.service';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +6,5 @@ import { StoreService } from './store.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor(public store: StoreService) {}
+  public isGameStarted = false;
 }

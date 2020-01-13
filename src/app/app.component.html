@@ -1,8 +1,8 @@
 <div class="app">
   <app-form
-    *ngIf="!store.isGameStarted"
+    *ngIf="!isGameStarted"
   ></app-form>
   <app-game
-    *ngIf="store.isGameStarted"
+    *ngIf="isGameStarted"
   ></app-game>
 </div>

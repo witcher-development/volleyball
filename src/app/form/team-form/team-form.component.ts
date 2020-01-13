@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {
   TeamNameI,
-  TeamInfoI,
   PlayerInfoI,
   FieldPartI,
   PlayerSkillI,
@@ -12,6 +11,16 @@ import {
   checkIfCanSetLevel,
   sortPlayersArrayAccordingToCells,
 } from '../../../helpers';
+import { TeamInfoI } from '../types';
+import {ErrorStateMatcher} from '@angular/material';
+import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  }
+}
 
 @Component({
   selector: 'app-team-form',
@@ -24,6 +33,9 @@ export class TeamFormComponent {
 
   @Input()
   fieldPart: FieldPartI;
+
+  @Input()
+  teamNameError: boolean;
 
   @Output() teamChange = new EventEmitter<TeamInfoI>();
 

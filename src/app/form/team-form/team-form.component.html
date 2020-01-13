@@ -5,9 +5,11 @@
       placeholder="Team name"
       [ngModel]="team.name"
       (ngModelChange)="onNameChange($event)"
+      required
+      [errorStateMatcher]="team.nameError"
     />
   </mat-form-field>
-  <div [className]="fieldPart + '-half form__grid'">
+  <div [className]="fieldPart + '-half form__grid'" *ngIf="team.name && !teamNameError">
     <app-grid
       [halves]="fieldPart"
       class="form__grid_inner"

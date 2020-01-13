@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { GameI, TeamI, TeamInfoI, TeamNameI } from '../../model';
+import { Component } from '@angular/core';
+import { TeamInfoI } from './types';
 import { StoreService } from '../store.service';
 
 @Component({
@@ -8,24 +8,49 @@ import { StoreService } from '../store.service';
   styleUrls: ['./form.component.scss'],
 })
 export class FormComponent {
-  constructor(public store: StoreService) {}
+  public teams: TeamInfoI[] = [];
+  constructor(public store: StoreService) {
+    this.teams[0] = this.getEmptyTeam();
+    this.teams[1] = this.getEmptyTeam();
+  }
+
+  getEmptyTeam(): TeamInfoI {
+    return {
+      name: '',
+      players: [],
+      nameError: false,
+    };
+  }
 
   onClickStart() {
     this.store.initRound();
   }
 
-  onTeamChange(name: TeamNameI, team: TeamI) {
-    this.store.game.field[name] = team;
+  onTeamChange(index: number, team: TeamInfoI) {
+    const isSameName = this.teams
+      .filter((_, i) => i !== index)
+      .find((anotherTeam) => anotherTeam.name === name);
+    if (isSameName) {
+      this.teams[index].nameError = true;
+    }
+    this.teams[index] = team;
   }
 
   get areTeamsReady(): boolean {
     let ready = true;
+    const teamsArray = Object.values(this.teams);
 
-    [...this.store.team1.players, ...this.store.team2.players].forEach(({ skill }) => {
-      if (!skill) ready = false;
+    teamsArray.forEach(({ players }) => {
+      players.forEach(({ skill }) => {
+        if (!skill) ready = false;
+      });
     });
 
-    if (!this.store.team1.name || !this.store.team2.name) {
+    if (
+      teamsArray[0].name === teamsArray[1].name ||
+      !teamsArray[0].name ||
+      !teamsArray[1].name
+    ) {
       ready = false;
     }
 

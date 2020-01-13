@@ -8,36 +8,27 @@
   >
     Start
   </button>
-  <mat-tab-group mat-stretch-tabs [animationDuration]="0" class="form__nav">
+  <mat-tab-group mat-stretch-tabs [animationDuration]="'0'" class="form__nav">
     <mat-tab label="PvP">
-      <div class="form__team">
+      <div class="form__team" *ngFor="let team of teams; let i = index">
         <div class="form__team-header">
           <p>First player</p>
           <button
             mat-raised-button
             color="primary"
             class="form__button"
-            (click)="game.field[team1.name].randomTeam()"
+            [disabled]="!team.name"
+            (click)="store.setRandomTeam(team.name)"
           >
             Random
           </button>
         </div>
-        <app-team-form (teamChange)="onTeamChange(team1.name, $event)" [(team)]="team1" [fieldPart]="'top'"></app-team-form>
-      </div>
-      <mat-divider></mat-divider>
-      <div class="form__team">
-        <div class="form__team-header">
-          <p>Second player</p>
-          <button
-            mat-raised-button
-            color="primary"
-            class="form__button"
-            (click)="game.field[team2.name].randomTeam()"
-          >
-            Random
-          </button>
-        </div>
-        <app-team-form (teamChange)="onTeamChange(team1.name, $event)" [(team)]="team2" [fieldPart]="'bottom'"></app-team-form>
+        <app-team-form
+          (teamChange)="onTeamChange(i, $event)"
+          [(team)]="team"
+          [fieldPart]="'top'"
+        ></app-team-form>
+        <mat-divider></mat-divider>
       </div>
     </mat-tab>
     <mat-tab label="PvE">
